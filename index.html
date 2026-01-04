@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AutOmad Ultimate</title>
+<!-- ربط ملف التصميم CSS -->
+<link rel="stylesheet" href="style.css">
+<!-- أيقونات Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+<div class="header">
+<h1>AutOmad Ultimate</h1>
+<p>🤖 طبيب سيارتك الذكي 🇩🇿</p>
+</div>
+
+<div class="container">
+
+<div class="card">
+<select id="brand">
+<option value="">-- ماركة السيارة --</option>
+<option>Renault</option>
+<option>Peugeot</option>
+<option>Dacia</option>
+<option>Volkswagen</option>
+<option>Hyundai</option>
+<option>Toyota</option>
+</select>
+
+<select id="model">
+<option value="">-- موديل السيارة --</option>
+</select>
+
+<div class="row">
+<input type="number" id="year" placeholder="سنة الصنع">
+<select id="engine">
+<option>Essence</option>
+<option>Diesel</option>
+<option>GPL</option>
+</select>
+</div>
+
+<input id="problem" placeholder="اشرح المشكل (رعدة، دخان، سخانة...)">
+</div>
+
+<div id="loader" class="loader">
+<i class="fas fa-cog fa-spin"></i> جاري التحليل...
+</div>
+
+<button class="ai" onclick="runAI()">
+<i class="fas fa-brain"></i> تشخيص ذكي
+</button>
+
+<input type="file" id="camera" accept="image/*" capture="camera" hidden>
+
+<button class="cam" onclick="camera.click()">
+<i class="fas fa-camera"></i> تصوير العطل
+</button>
+
+<button class="map" onclick="findParts()">
+<i class="fas fa-map-marker-alt"></i> أقرب ميكانيكي / قطع غيار
+</button>
+
+<img id="preview">
+<div id="result" class="result"></div>
+
+<button id="waBtn" class="wa" onclick="sendWhats()">
+<i class="fab fa-whatsapp"></i> إرسال التقرير
+</button>
+
+</div>
+
+<!-- ربط ملف JS -->
+<script src="app.js"></script>
+</body>
+</html>

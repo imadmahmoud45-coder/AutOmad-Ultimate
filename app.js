@@ -1,0 +1,111 @@
+// ======= موديلات السيارات =======
+const modelsData = {
+Renault:["Clio","Symbol","Logan","Megane","Kangoo"],
+Peugeot:["206","207","208","301","308"],
+Dacia:["Logan","Sandero","Duster"],
+Volkswagen:["Golf","Polo","Passat"],
+Hyundai:["i10","i20","Accent","Elantra"],
+Toyota:["Yaris","Corolla","Hilux"]
+};
+
+brand.addEventListener("change",()=>{
+model.innerHTML='<option value="">-- موديل السيارة --</option>';
+(modelsData[brand.value]||[]).forEach(m=>{
+let o=document.createElement("option");
+o.textContent=m;
+model.appendChild(o);
+});
+});
+
+// ======= قطع الغيار الفرنسية + العربية =======
+const parts = {
+bougie: "Bougie (شمعة الإشعال)",
+injecteur: "Injecteur (حاقن الوقود)",
+pompe: "Pompe à carburant (مضخة الوقود)",
+capteur: "Capteur (حساس)",
+embrayage: "Embrayage (القابض)",
+radiateur: "Radiateur (المبرد)",
+alternateur: "Alternateur (المولد)",
+batterie: "Batterie (البطارية)"
+};
+
+// ======= متغيرات =======
+const loader=document.getElementById("loader");
+const result=document.getElementById("result");
+const preview=document.getElementById("preview");
+const waBtn=document.getElementById("waBtn");
+let report="";
+
+// ======= دالة AI + placeholder للـ API Key =======
+async function runAI(){
+if(problem.value.trim()===""){alert("اكتب المشكل");return;}
+loader.style.display="block";
+result.innerHTML="";
+waBtn.style.display="none";
+
+let prompt = `
+أجب بالعربية بأسلوب جزائري راقي،
+اذكر القطع بالفرنسية ثم شرحها بالعربية بين قوسين،
+السيارة: ${brand.value} ${model.value}
+السنة: ${year.value}
+المحرك: ${engine.value}
+المشكل: ${problem.value}
+`;
+
+// ======= placeholder تحليل الصور =======
+let imageText = "";
+if(preview.src){
+imageText = "الصورة المرفوعة ستُحلل لاحقًا بواسطة Vision API.";
+}
+
+prompt += "\n" + imageText;
+
+// ======= Placeholder للذكاء الاصطناعي =======
+setTimeout(()=>{
+report = `
+السيارة: ${brand.value} ${model.value}
+السنة: ${year.value}
+المحرك: ${engine.value}
+المشكل: ${problem.value}
+
+${imageText}
+
+التحليل المبدئي:
+من خلال الأعراض، قد يتعلق الأمر بـ
+${parts.bougie} أو ${parts.injecteur}.
+
+📌 النصيحة:
+راجع ميكانيكي ثقة للفحص النهائي.
+
+⚠️ AutOmad يعطي توجيه مبدئي فقط.
+`;
+result.innerHTML=`<div class="result-card"><h3>🔍 تشخيص مبدئي</h3><p>${report.replace(/\n/g,"<br>")}</p></div>`;
+waBtn.style.display="flex";
+loader.style.display="none";
+},1200);
+}
+
+// ======= الكاميرا =======
+camera.addEventListener("change",()=>{
+const file=camera.files[0];
+if(!file)return;
+preview.src = URL.createObjectURL(file);
+preview.style.display="block";
+runAI();
+});
+
+// ======= خرائط =======
+function findParts(){
+navigator.geolocation.getCurrentPosition(pos=>{
+const {latitude,longitude}=pos.coords;
+window.open(
+`https://www.google.com/maps/search/ميكانيكي+قطع+غيار/@${latitude},${longitude},15z`,
+"_blank");
+});
+}
+
+// ======= WhatsApp =======
+function sendWhats(){
+const msg=encodeURIComponent("تقرير AutOmad:\n\n"+report);
+window.open(`https://wa.me/?text=${msg}`,"_blank");
+}
